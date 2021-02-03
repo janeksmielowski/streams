@@ -3,9 +3,9 @@ import {
     StreamForEachFn,
     StreamMapFn,
     StreamMatchFn,
+    StreamReduceFn,
     StreamSortFn
 } from './types';
-import Accumulator from '../Accumulator';
 import Collection from '../Collection';
 import Collector from '../Collector';
 import Optional from '../Optional';
@@ -101,9 +101,9 @@ class Stream<T> {
     }
 
     public reduce<O>(
-        initValue: O, accumulator: Accumulator<T, O>
+        initValue: O, reduceFn: StreamReduceFn<T, O>
     ): Optional<O> {
-        const value = this.collection.reduce(accumulator.apply, initValue);
+        const value = this.collection.reduce(reduceFn, initValue);
         return Optional.of(value);
     }
 
