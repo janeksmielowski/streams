@@ -100,6 +100,11 @@ class Stream<T> {
         return !this.collection.some(predicate);
     }
 
+    public peek(peekFn: StreamForEachFn<T>): Stream<T> {
+        this.collection.forEach(peekFn);
+        return this;
+    }
+
     public reduce<O>(
         initValue: O, reduceFn: StreamReduceFn<T, O>
     ): Optional<O> {

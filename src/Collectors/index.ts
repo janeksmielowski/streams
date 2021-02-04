@@ -1,5 +1,6 @@
 import Collection from '../Collection';
 import Collector from '../Collector';
+import { GroupingByMap } from './types';
 
 class Collectors {
     public static toArray<T>(): Collector<T, Array<T>> {
@@ -43,7 +44,5 @@ implements Collector<T, GroupingByMap<T, K>> {
         return rest;
     }
 }
-
-type GroupingByMap<T, K extends keyof T> = Map<T[K], Array<Omit<T, K>>>;
 
 export default Collectors;
