@@ -6,10 +6,10 @@ class Collectors {
         return new ArrayCollector<T>();
     }
 
-    public static groupingBy<T, K extends MapKey>(
-        groupFn: GroupFn<T, K>
-    ): Collector<T, Map<K, Array<T>>> {
-        return new GroupingByCollector(groupFn);
+    public static groupingBy<T, K extends keyof T>(
+        key: K
+    ): Collector<T, GroupingByMap<T, K>> {
+        return new GroupingByCollector(key);
     }
 }
 
@@ -19,28 +19,31 @@ class ArrayCollector<T> implements Collector<T, Array<T>> {
     }
 }
 
-class GroupingByCollector<T, K extends MapKey>
-implements Collector<T, Map<K, Array<T>>> {
-    private groupFn: GroupFn<T, K>;
+class GroupingByCollector<T, K extends keyof T>
+implements Collector<T, GroupingByMap<T, K>> {
+    private key: K;
 
-    public constructor(groupFn: GroupFn<T, K>) {
-        this.groupFn = groupFn;
+    public constructor(key: K) {
+        this.key = key;
     }
 
-    public collect(collection: Collection<T>): Map<K, Array<T>> {
-        const map = new Map<K, Array<T>>();
-        collection.forEach(value => {
-            map.set(this.groupFn(value), [
-                // eslint-disable-next-line no-extra-parens
-                ...(map.get(this.groupFn(value)) || []),
-                value
-            ]);
-        });
+    public collect(collection: Collection<T>): GroupingByMap<T, K> {
+        const map = new Map();
+        collection.forEach(item => map.set(
+            item[this.key], [
+                ...(map.get(item[this.key]) || []),
+                this.getItemWithoutKey(item, this.key)
+            ]
+        ));
         return map;
+    }
+
+    private getItemWithoutKey = (item: T, key: K) => {
+        const { [key]: _, ...rest } = item;
+        return rest;
     }
 }
 
-type GroupFn<T, K extends MapKey> = (value: T) => K;
-type MapKey = number | string | symbol;
+type GroupingByMap<T, K extends keyof T> = Map<T[K], Array<Omit<T, K>>>;
 
 export default Collectors;
