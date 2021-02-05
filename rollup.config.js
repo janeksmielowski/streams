@@ -30,6 +30,7 @@ export default [
         external,
         input: './src/index.ts',
         output: {
+            exports: 'named',
             file: './lib/index.js',
             format: 'cjs'
         },
