@@ -23,7 +23,7 @@ class Optional<T> {
         return Boolean(this.value);
     }
 
-    public orElse(other: OptionalValue<T>): OptionalValue<T> {
+    public orElse(other: T): T {
         return this.value || other;
     }
 }
