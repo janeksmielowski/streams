@@ -1,6 +1,7 @@
 {
-  "name": "@jeyz/streamer",
+  "name": "@jeyz/streams",
   "version": "1.0.0",
+  "private": false,
   "description": "JavaScript/TypeScript library for easy collections manipulation via stream, inspired by Java.",
   "keywords": [],
   "author": "janeksmielowski",
